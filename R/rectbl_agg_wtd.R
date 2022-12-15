@@ -7,7 +7,31 @@
 #' @export
 #'
 #' @examples
-#' rectbl_agg_wtd("my_col")
+#' if(require("reactable")) {
+#' set.seed(123)
+#' n <- 10
+#' reactable(
+#'  data =
+#'    tibble::tibble(
+#'      Group = rep(c("A", "B"), n / 2),
+#'      Weight = rbinom(n, size = 500, prob = 1 / (1:n + 1)),
+#'      `Mean of Groups` = rnorm(n, mean = 1:n),
+#'      `Weighted Mean` = `Mean of Groups`,
+#'      `Sum of Groups` = `Mean of Groups`,
+#'      `Weighted Sum` = `Mean of Groups`
+#'    ),
+#'  groupBy = "Group",
+#'  columns =
+#'    list(
+#'      Weight = colDef(aggregate = "sum"),
+#'      `Mean of Groups` = colDef(aggregate = "mean"),
+#'      `Weighted Mean` = colDef(aggregate = rectbl_agg_wtd("Weight")),
+#'      `Sum of Groups` = colDef(aggregate = "sum"),
+#'      `Weighted Sum` = colDef(aggregate = rectbl_agg_wtd("Weight", result = "sum"))
+#'    )
+#')
+#'}
+#'
 rectbl_agg_wtd <-
   function(
     wt_col,
